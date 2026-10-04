@@ -12,7 +12,7 @@ import { handleWelcome } from "./handlers/welcome";
 const EPHEMERAL_COMMANDS = ["/assign", "/autoassign"];
 
 export const bot = new Chat({
-  userName: process.env.BOT_USERNAME ?? "minerva-bot",
+  userName: "Minerva Bot",
   adapters: {
     discord: createDiscordAdapter({
       interactionFlags: ({ command }) =>

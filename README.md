@@ -21,7 +21,6 @@ bun run dev
 ## Endpoints
 
 - Discord: `/api/webhooks/discord`
-- Discord Gateway (cron): `/api/discord/gateway` - keeps the Gateway connection alive so message and reaction events reach the bot. Scheduled in `vercel.json`, authenticated with `CRON_SECRET`, and requires Vercel Pro or Enterprise.
 
 ## Commands
 
