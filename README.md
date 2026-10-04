@@ -35,12 +35,12 @@ The bot registers four guild slash commands. Definitions live in
 | `/assign <role>` | Everyone | Assign yourself the `hacker`, `judge`, or `mentor` role. |
 | `/assign @user <role>` | Administrators | Assign a role to another member. |
 | `/setup` | Administrators | Create the standard categories and channels. |
-| `/roles` | Administrators | Create the `Hacker`, `Judge`, and `Mentor` roles. |
+| `/roles` | Administrators | Create the `Hacker`, `Organizer`, `Judge`, and `Mentor` roles. |
 | `/welcome` | Everyone | Greet this server's hackathon and report systems status. |
 
-The `/assign`, `/setup`, and `/roles` commands respond ephemerally, so only
-the invoker sees the result. `/welcome` replies publicly so everyone in the
-channel sees the greeting.
+The `/assign` and `/setup` commands respond ephemerally, so only the invoker
+sees the result. `/roles` and `/welcome` reply publicly so everyone in the
+channel sees the summary or greeting.
 
 `/assign` requires the roles to already exist — run `/roles` first. `/roles` and
 `/setup` are idempotent: anything that already exists is left untouched.
@@ -48,14 +48,14 @@ channel sees the greeting.
 The template created by `/roles` and `/setup` lives in
 `src/lib/server-template.ts`:
 
-- **Roles:** `Hacker`, `Judge`, `Mentor`
+- **Roles:** `Hacker`, `Organizer`, `Judge`, `Mentor`
 - **Categories/channels:**
   - **Info Desk** — `rules`, `welcome`, `role-request`, `resources`, `faq`
   - **workshops** — `workshop-questions`, `mlh`
   - **help-desk** — `team-formation` (forum)
   - **general** — `introductions`, `talk-to-organizers`, `general`, `linkedin`, `github`, `devpost`, `off-topic`, `memes`
   - **mentors** — `mentor-introductions`, `ask-mentors`
-  - **organizers** — `general`, `system-logs` (administrators only)
+  - **organizers** — `general`, `system-logs` (hidden from `@everyone`; the `Organizer` role and administrators can see and manage it)
 
 The bot needs the **Manage Roles** and **Manage Channels** permissions, and its
 highest role must sit above the roles it manages.

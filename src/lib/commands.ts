@@ -26,12 +26,38 @@ const adminGuildCommand = {
   default_member_permissions: "8", // Administrator
 } satisfies Partial<RESTPostAPIApplicationCommandsJSONBody>;
 
-/** `/assign [user] <hacker|judge|mentor>` — open to all members; assigning to another member is enforced at runtime (administrator only). */
+/** `/assign <hacker|organizer|judge|mentor>` — open to all members; assigns the role to yourself only. */
 export const COMMAND_ASSIGN = {
   ...guildCommand,
   name: "assign",
-  description: "Assign a hacker, judge, or mentor role.",
+  description: "Assign yourself a hacker, judge, or mentor role.",
   options: [
+    {
+      type: ApplicationCommandOptionType.String,
+      name: "role",
+      description: "Which role to assign to yourself",
+      required: true,
+      choices: TEMPLATE_ROLES.map((role) => ({
+        name: role.name,
+        value: role.key,
+      })),
+    },
+  ],
+} satisfies RESTPostAPIApplicationCommandsJSONBody;
+
+/** `/autoassign <user> <hacker|organizer|judge|mentor>` — administrator only; assigns any member a template role. */
+export const COMMAND_AUTOASSIGN = {
+  ...adminGuildCommand,
+  name: "autoassign",
+  description:
+    "Assign any member a hacker, organizer, judge, or mentor role (administrators only).",
+  options: [
+    {
+      type: ApplicationCommandOptionType.User,
+      name: "user",
+      description: "Member to assign the role to",
+      required: true,
+    },
     {
       type: ApplicationCommandOptionType.String,
       name: "role",
@@ -42,12 +68,6 @@ export const COMMAND_ASSIGN = {
         value: role.key,
       })),
     },
-    {
-      type: ApplicationCommandOptionType.User,
-      name: "user",
-      description:
-        "Member to assign the role to (administrators only; defaults to you)",
-    },
   ],
 } satisfies RESTPostAPIApplicationCommandsJSONBody;
 
@@ -55,26 +75,28 @@ export const COMMAND_ASSIGN = {
 export const COMMAND_SETUP = {
   ...adminGuildCommand,
   name: "setup",
-  description: "Create the server's standard categories and channels.",
+  description: "Create the server's standard categories and channels (administrators only).",
 } satisfies RESTPostAPIApplicationCommandsJSONBody;
 
 /** `/roles` — create the standard roles (administrator only). */
 export const COMMAND_ROLES = {
   ...adminGuildCommand,
   name: "roles",
-  description: "Create the server's standard hacker, judge, and mentor roles.",
+  description:
+    "Create the server's standard hacker, organizer, judge, and mentor roles (administrators only).",
 } satisfies RESTPostAPIApplicationCommandsJSONBody;
 
 /** `/welcome` — greet this server's hackathon and report systems status. */
 export const COMMAND_WELCOME = {
-  ...guildCommand,
+  ...adminGuildCommand,
   name: "welcome",
-  description: "Greet this server's hackathon and check systems status.",
+  description: "Greet this server's hackathon and check systems status (administrators only).",
 } satisfies RESTPostAPIApplicationCommandsJSONBody;
 
 /** Every command to publish via bulk overwrite (`PUT /applications/{application_id}/commands`). */
 export const commands = [
   COMMAND_ASSIGN,
+  COMMAND_AUTOASSIGN,
   COMMAND_SETUP,
   COMMAND_ROLES,
   COMMAND_WELCOME,

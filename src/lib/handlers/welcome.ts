@@ -14,7 +14,7 @@ export async function handleWelcome(event: SlashCommandEvent): Promise<void> {
   const tenant = getTenantByServerId(guildId);
   if (!tenant) {
     await event.channel.post(
-      `Hello! All systems are operational! ✅\nThis server (\`${guildId}\`) isn't mapped to a hackathon yet — add it to \`tenants.json\` to get a personalized greeting.`,
+      `\nThis server (\`${guildId}\`) isn't mapped to a hackathon yet — add it to \`tenants.json\` to get a personalized greeting.`,
     );
     return;
   }

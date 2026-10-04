@@ -1,6 +1,8 @@
 import type {
   RESTGetAPIGuildChannelsResult,
   RESTGetAPIGuildRolesResult,
+  RESTPatchAPIChannelJSONBody,
+  RESTPatchAPIChannelResult,
   RESTPostAPIGuildChannelJSONBody,
   RESTPostAPIGuildChannelResult,
   RESTPostAPIGuildRoleJSONBody,
@@ -90,6 +92,19 @@ export function createGuildChannel(
   return discordApiRequest<RESTPostAPIGuildChannelResult>(
     `/guilds/${guildId}/channels`,
     { method: "POST", body: channel },
+    options,
+  );
+}
+
+/** Update a channel or category (e.g. repair permission overwrites on re-run). */
+export function patchChannel(
+  channelId: Snowflake,
+  channel: RESTPatchAPIChannelJSONBody,
+  options?: DiscordApiRequestOptions,
+): Promise<RESTPatchAPIChannelResult> {
+  return discordApiRequest<RESTPatchAPIChannelResult>(
+    `/channels/${channelId}`,
+    { method: "PATCH", body: channel },
     options,
   );
 }

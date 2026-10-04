@@ -1,11 +1,11 @@
 import { ChannelType } from "discord-api-types/v10";
 
-/** Single source of truth for the server structure: {@link TEMPLATE_ROLES} (`/roles`), {@link TEMPLATE_CATEGORIES} (`/setup`), {@link ASSIGNABLE_ROLE_NAMES} (`/assign`). */
+/** Single source of truth for the server structure: {@link TEMPLATE_ROLES} (`/roles`, `/autoassign`), {@link SELF_ASSIGNABLE_ROLES} (`/assign`), {@link TEMPLATE_CATEGORIES} (`/setup`). */
 
-/** A role created by `/roles` and granted by `/assign`. */
+/** A role created by `/roles` and granted by `/assign` and `/autoassign`. */
 export interface TemplateRole {
   /** Stable key used in slash command choices and lookups. */
-  key: "hacker" | "judge" | "mentor";
+  key: "hacker" | "organizer" | "judge" | "mentor";
   /** Discord role name. */
   name: string;
   /** RGB color as a hex integer. */
@@ -14,19 +14,26 @@ export interface TemplateRole {
   hoist: boolean;
   /** Allow @mentioning the role. */
   mentionable: boolean;
+  /** When false, only administrators (via `/autoassign`) can grant it. */
+  selfAssignable: boolean;
 }
 
-/** Roles that `/assign` can grant. */
+/** Roles that `/roles` creates and `/autoassign` can grant. */
 export const TEMPLATE_ROLES: TemplateRole[] = [
-  { key: "hacker", name: "Hacker", color: 0x5865f2, hoist: true, mentionable: true },
-  { key: "judge", name: "Judge", color: 0xeb459e, hoist: true, mentionable: true },
-  { key: "mentor", name: "Mentor", color: 0x57f287, hoist: true, mentionable: true },
+  { key: "hacker", name: "Hacker", color: 0x5865f2, hoist: true, mentionable: true, selfAssignable: true },
+  { key: "organizer", name: "Organizer", color: 0xfee75c, hoist: true, mentionable: true, selfAssignable: false },
+  { key: "judge", name: "Judge", color: 0xeb459e, hoist: true, mentionable: true, selfAssignable: true },
+  { key: "mentor", name: "Mentor", color: 0x57f287, hoist: true, mentionable: true, selfAssignable: true },
 ];
 
-/** The assignable role keys, in template order. */
-export const ASSIGNABLE_ROLE_NAMES: TemplateRole["key"][] = TEMPLATE_ROLES.map(
-  (role) => role.key,
+/** Roles that `/assign` can grant (self-serve, in template order). */
+export const SELF_ASSIGNABLE_ROLES: TemplateRole[] = TEMPLATE_ROLES.filter(
+  (role) => role.selfAssignable,
 );
+
+/** The self-assignable role keys, in template order. */
+export const ASSIGNABLE_ROLE_NAMES: TemplateRole["key"][] =
+  SELF_ASSIGNABLE_ROLES.map((role) => role.key);
 
 /** A channel created by `/setup`. */
 export interface TemplateChannel {
@@ -37,7 +44,12 @@ export interface TemplateChannel {
 /** A category (and its channels) created by `/setup`. */
 export interface TemplateCategory {
   name: string;
-  /** When true, only administrators can see the category and its channels. */
+  /**
+   * When true, `@everyone` is denied `ViewChannel`, so only members with a
+   * privileged role can see the category and its channels. The `Organizer`
+   * role (and the bot) get admin-level rights over these channels; server
+   * administrators always bypass channel overwrites.
+   */
   adminOnly?: boolean;
   channels: TemplateChannel[];
 }
