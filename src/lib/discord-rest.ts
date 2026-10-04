@@ -27,35 +27,64 @@ export interface DiscordRequestInit {
   body?: string;
 }
 
-/** Perform an authenticated JSON request against an absolute Discord URL. */
+/** Extra attempts a request gets after Discord responds 429 (rate limit). */
+const MAX_RATE_LIMIT_RETRIES = 4;
+
+/** How long to wait after a 429; Discord sends `retry_after` in seconds. */
+function retryAfterMs(body: string): number {
+  try {
+    const parsed = JSON.parse(body) as { retry_after?: unknown };
+    if (typeof parsed.retry_after === "number") {
+      // Buffer the wait slightly so the retry does not land on the limit again.
+      return Math.ceil(parsed.retry_after * 1000) + 50;
+    }
+  } catch {
+    // Non-JSON body — fall through to the default delay.
+  }
+  return 1000;
+}
+
+/**
+ * Perform an authenticated JSON request against an absolute Discord URL,
+ * waiting out rate limits. Bulk operations (e.g. `/setup` deleting every
+ * channel) exceed Discord's per-route burst limit, so 429s are retried.
+ */
 export async function discordRequest<T>(
   url: string,
   botToken: string,
   init: DiscordRequestInit,
 ): Promise<T> {
-  const response = await fetch(url, {
-    method: init.method,
-    body: init.body,
-    headers: {
-      Authorization: `Bot ${botToken}`,
-      "Content-Type": "application/json",
-    },
-  });
+  for (let attempt = 0; ; attempt++) {
+    const response = await fetch(url, {
+      method: init.method,
+      body: init.body,
+      headers: {
+        Authorization: `Bot ${botToken}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-  if (!response.ok) {
-    const detail = await response.text().catch(() => "");
-    throw new Error(
-      `Discord API ${init.method} ${url} failed with ${response.status} ${
-        response.statusText
-      }${detail ? `: ${detail}` : ""}`,
-    );
+    if (response.status === 429 && attempt < MAX_RATE_LIMIT_RETRIES) {
+      const body = await response.text().catch(() => "");
+      await new Promise((resolve) => setTimeout(resolve, retryAfterMs(body)));
+      continue;
+    }
+
+    if (!response.ok) {
+      const detail = await response.text().catch(() => "");
+      throw new Error(
+        `Discord API ${init.method} ${url} failed with ${response.status} ${
+          response.statusText
+        }${detail ? `: ${detail}` : ""}`,
+      );
+    }
+
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
+    return (await response.json()) as T;
   }
-
-  if (response.status === 204) {
-    return undefined as T;
-  }
-
-  return (await response.json()) as T;
 }
 
 /** Credential overrides for {@link discordApiRequest}. */

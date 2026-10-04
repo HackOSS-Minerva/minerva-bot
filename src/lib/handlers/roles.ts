@@ -51,5 +51,5 @@ export async function handleRoles(event: SlashCommandEvent): Promise<void> {
     }
   }
 
-  await event.channel.post(summarize("Role setup", created, skipped));
+  await event.channel.post(summarize("Role setup", "roles", created, skipped));
 }

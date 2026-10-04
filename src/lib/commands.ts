@@ -71,11 +71,11 @@ export const COMMAND_AUTOASSIGN = {
   ],
 } satisfies RESTPostAPIApplicationCommandsJSONBody;
 
-/** `/setup` — create the standard categories and channels (administrator only). */
+/** `/setup` — DESTRUCTIVE: wipe every channel and category, then recreate the standard structure (administrator only). */
 export const COMMAND_SETUP = {
   ...adminGuildCommand,
   name: "setup",
-  description: "Create the server's standard categories and channels (administrators only).",
+  description: "⚠️ Destructive: deletes every channel and category, then recreates the template (admins only).",
 } satisfies RESTPostAPIApplicationCommandsJSONBody;
 
 /** `/roles` — create the standard roles (administrator only). */

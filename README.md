@@ -34,28 +34,58 @@ The bot registers four guild slash commands. Definitions live in
 | --- | --- | --- |
 | `/assign <role>` | Everyone | Assign yourself the `hacker`, `judge`, or `mentor` role. |
 | `/assign @user <role>` | Administrators | Assign a role to another member. |
-| `/setup` | Administrators | Create the standard categories and channels. |
+| `/setup` | Administrators | ⚠️ Destructive: delete every channel and category, then recreate the standard ones. |
 | `/roles` | Administrators | Create the `Hacker`, `Organizer`, `Judge`, and `Mentor` roles. |
 | `/welcome` | Everyone | Greet this server's hackathon and report systems status. |
 
-The `/assign` and `/setup` commands respond ephemerally, so only the invoker
-sees the result. `/roles` and `/welcome` reply publicly so everyone in the
-channel sees the summary or greeting.
+The `/assign` command responds ephemerally, so only the invoker sees the
+result. `/setup`, `/roles`, and `/welcome` reply publicly so everyone in the
+channel sees the summary or greeting. `/setup` groups its summary by category:
+what it deleted first, new categories, new channels, which channels already
+exist, and anything it updated (permissions, or drifted category names and
+topics). `/setup` deletes every channel before rebuilding, so the summary
+normally can't go back to the channel you ran it in — it is posted in
+`#system-logs` (inside the organizer-only `organizers` category) instead,
+falling back to `#general` if that channel doesn't exist. Channels the bot
+cannot delete are reported as failures rather than silently skipped, so a run may
+only partially succeed.
 
-`/assign` requires the roles to already exist — run `/roles` first. `/roles` and
-`/setup` are idempotent: anything that already exists is left untouched.
+There is deliberately no separate "delete everything" command: `/setup` already
+wipes the server as its first step, so `/nuke` would only have been a slower,
+riskier way to reach the same empty state.
+
+`/assign` and `/setup` require the roles to already exist — run `/roles` first.
+If any template roles are missing, `/setup` stops and tells you to run `/roles`
+and then `/setup`.
+
+**`/setup` is destructive.** It posts a warning, then deletes *every* existing
+channel and category in the server before rebuilding the template from
+`src/lib/server-template.ts` — so anything outside the template (extra
+channels, threads, pins, message history) is permanently lost. `/roles` is not
+destructive: it is idempotent and safe to re-run.
 
 The template created by `/roles` and `/setup` lives in
 `src/lib/server-template.ts`:
 
 - **Roles:** `Hacker`, `Organizer`, `Judge`, `Mentor`
-- **Categories/channels:**
-  - **Info Desk** — `rules`, `welcome`, `role-request`, `resources`, `faq`
-  - **workshops** — `workshop-questions`, `mlh`
-  - **help-desk** — `team-formation` (forum)
-  - **general** — `introductions`, `talk-to-organizers`, `general`, `linkedin`, `github`, `devpost`, `off-topic`, `memes`
-  - **mentors** — `mentor-introductions`, `ask-mentors`
-  - **organizers** — `general`, `system-logs` (hidden from `@everyone`; the `Organizer` role and administrators can see and manage it)
+- **Categories/channels:** category names carry a colored circle, and each
+  channel's topic carries its own:
+  - **🔵 Info Desk** — `rules`, `welcome`, `role-request`, `resources`, `faq`
+  - **🟠 workshops** — `workshop-questions`, `mlh`
+  - **🟢 help-desk** — `team-formation` (forum)
+  - **⚪ general** — `introductions`, `talk-to-organizers`, `general`, `linkedin`, `github`, `devpost`, `off-topic`, `memes`
+  - **🟡 mentors** — `mentor-introductions`, `ask-mentors`
+  - **🔴 organizers** — `general`, `system-logs` (hidden from `@everyone`; the `Organizer` role and administrators can see and manage it)
+
+  **Why the emoji lives in two different places.** Discord strips emoji from
+  text/forum channel *names* (it lowercases them and turns spaces into hyphens),
+  but category names are exempt from that normalization and channel *topics* are
+  unconstrained. So the sidebar circle comes from the category name and the
+  per-channel circle comes from the topic, built by `categoryLabel()` and
+  `channelTopic()` in `src/lib/server-template.ts`. Don't "fix" this by inlining
+  the emoji into a channel name — Discord will silently drop it. The plain
+  channel names also keep `#channel` links and `/setup`'s idempotent re-runs
+  working; re-running repairs drifted category names and topics.
 
 The bot needs the **Manage Roles** and **Manage Channels** permissions, and its
 highest role must sit above the roles it manages.

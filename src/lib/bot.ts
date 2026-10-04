@@ -12,7 +12,7 @@ import { handleSetup } from "./handlers/setup";
 import { handleWelcome } from "./handlers/welcome";
 
 /** Slash commands whose response is only visible to the person who ran them. */
-const EPHEMERAL_COMMANDS = ["/assign", "/autoassign", "/setup"];
+const EPHEMERAL_COMMANDS = ["/assign", "/autoassign"];
 
 export const bot = new Chat({
   userName: process.env.BOT_USERNAME ?? "minerva-bot",

@@ -3,6 +3,7 @@ import type {
   RESTGetAPIGuildRolesResult,
   RESTPatchAPIChannelJSONBody,
   RESTPatchAPIChannelResult,
+  RESTPostAPIChannelMessageResult,
   RESTPostAPIGuildChannelJSONBody,
   RESTPostAPIGuildChannelResult,
   RESTPostAPIGuildRoleJSONBody,
@@ -105,6 +106,31 @@ export function patchChannel(
   return discordApiRequest<RESTPatchAPIChannelResult>(
     `/channels/${channelId}`,
     { method: "PATCH", body: channel },
+    options,
+  );
+}
+
+/** Delete a channel or category in a guild. */
+export function deleteGuildChannel(
+  channelId: Snowflake,
+  options?: DiscordApiRequestOptions,
+): Promise<void> {
+  return discordApiRequest<void>(
+    `/channels/${channelId}`,
+    { method: "DELETE" },
+    options,
+  );
+}
+
+/** Post a plain-text message in a channel (used when the interaction's channel no longer exists). */
+export function createChannelMessage(
+  channelId: Snowflake,
+  content: string,
+  options?: DiscordApiRequestOptions,
+): Promise<RESTPostAPIChannelMessageResult> {
+  return discordApiRequest<RESTPostAPIChannelMessageResult>(
+    `/channels/${channelId}/messages`,
+    { method: "POST", body: { content } },
     options,
   );
 }
