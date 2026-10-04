@@ -6,12 +6,16 @@
     "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "publish": "bun run scripts/publish.ts",
+    "commands": "bun run scripts/list.ts",
+    "clear": "bun run scripts/clear.ts"
   },
   "dependencies": {
     "@chat-adapter/discord": "latest",
     "@chat-adapter/state-memory": "latest",
     "chat": "latest",
+    "discord-api-types": "^0.38.56",
     "next": "^16.2.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
