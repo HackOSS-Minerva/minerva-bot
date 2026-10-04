@@ -1,12 +1,5 @@
 #!/usr/bin/env bun
-/**
- * List the bot's currently registered Discord slash commands.
- *
- *   bun run commands
- *
- * Bun auto-loads `.env.local`, so `DISCORD_BOT_TOKEN` and
- * `DISCORD_APPLICATION_ID` are picked up automatically.
- */
+/** List the bot's registered global Discord slash commands (`bun run commands`; Bun auto-loads `.env.local`). */
 
 import { listDiscordCommands } from "../src/lib/discord-commands";
 

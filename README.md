@@ -23,6 +23,43 @@ bun run dev
 - Discord: `/api/webhooks/discord`
 - Discord Gateway (cron): `/api/discord/gateway` - keeps the Gateway connection alive so message and reaction events reach the bot. Scheduled in `vercel.json`, authenticated with `CRON_SECRET`, and requires Vercel Pro or Enterprise.
 
+## Commands
+
+The bot registers four guild slash commands. Definitions live in
+`src/lib/commands.ts`; handlers live in `src/lib/handlers/`. Tenants
+(Discord server ID → hackathon) live in `tenants.json` and are read through
+`src/lib/tenants.ts`.
+
+| Command | Who can run it | Description |
+| --- | --- | --- |
+| `/assign <role>` | Everyone | Assign yourself the `hacker`, `judge`, or `mentor` role. |
+| `/assign @user <role>` | Administrators | Assign a role to another member. |
+| `/setup` | Administrators | Create the standard categories and channels. |
+| `/roles` | Administrators | Create the `Hacker`, `Judge`, and `Mentor` roles. |
+| `/welcome` | Everyone | Greet this server's hackathon and report systems status. |
+
+The `/assign`, `/setup`, and `/roles` commands respond ephemerally, so only
+the invoker sees the result. `/welcome` replies publicly so everyone in the
+channel sees the greeting.
+
+`/assign` requires the roles to already exist — run `/roles` first. `/roles` and
+`/setup` are idempotent: anything that already exists is left untouched.
+
+The template created by `/roles` and `/setup` lives in
+`src/lib/server-template.ts`:
+
+- **Roles:** `Hacker`, `Judge`, `Mentor`
+- **Categories/channels:**
+  - **Info Desk** — `rules`, `welcome`, `role-request`, `resources`, `faq`
+  - **workshops** — `workshop-questions`, `mlh`
+  - **help-desk** — `team-formation` (forum)
+  - **general** — `introductions`, `talk-to-organizers`, `general`, `linkedin`, `github`, `devpost`, `off-topic`, `memes`
+  - **mentors** — `mentor-introductions`, `ask-mentors`
+  - **organizers** — `general`, `system-logs` (administrators only)
+
+The bot needs the **Manage Roles** and **Manage Channels** permissions, and its
+highest role must sit above the roles it manages.
+
 ## Publishing Discord Slash Commands
 
 The Chat SDK handles inbound slash commands but does **not** register them with Discord, so commands must be published separately. Command definitions live in one place — `src/lib/commands.ts` — and are published with the Discord REST API (`PUT /applications/{application_id}/commands`, global bulk overwrite).
@@ -43,13 +80,20 @@ To add a command, append it to the `commands` array in `src/lib/commands.ts` and
 src/
   lib/bot.ts                              Bot configuration and handlers
   lib/commands.ts                         Discord command registry (source of truth)
+  lib/server-template.ts                  Roles/channels created by /roles and /setup
+  lib/discord-rest.ts                     Shared low-level Discord REST client
   lib/discord-commands.ts                 Discord REST helpers to publish/list/clear commands
+  lib/discord-guild.ts                    Guild role/channel REST helpers
+  lib/discord-options.ts                  Raw interaction parsing (guild id, options, admin check)
+  lib/handlers/                           One handler per slash command (assign, setup, roles, welcome)
+  lib/tenants.ts                          Typed Discord server ID → tenant lookup over tenants.json
   app/api/webhooks/[platform]/route.ts    Webhook endpoint for platform adapters
   app/api/chat/route.ts                   Web adapter endpoint when selected
 scripts/
   publish.ts                              Publish slash commands (`bun run publish`)
   list.ts                                 List registered slash commands (`bun run commands`)
   clear.ts                                Remove all global slash commands (`bun run clear`)
+tenants.json                              Discord server ID → hackathon tenant registry
 .env.example                              Required environment variables
 ```
 

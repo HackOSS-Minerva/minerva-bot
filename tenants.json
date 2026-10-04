@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Tenant registry for minerva-bot. Keys are Discord server (guild) IDs. Add one entry per hackathon server so bot commands can resolve the caller's tenant.",
+  "1526746177725399060": {
+    "slug": "cutiehack",
+    "name": "Cutie Hack",
+    "event": "Cutie Hack 2026"
+  }
+}

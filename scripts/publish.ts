@@ -1,16 +1,5 @@
 #!/usr/bin/env bun
-/**
- * Publish the bot's slash commands to Discord (global bulk overwrite).
- *
- *   bun run publish
- *
- * Bun auto-loads `.env.local`, so `DISCORD_BOT_TOKEN` and
- * `DISCORD_APPLICATION_ID` are picked up automatically.
- *
- * Note: global commands can take up to an hour to appear in Discord clients.
- *
- * @see https://docs.discord.com/developers/interactions/application-commands#registering-a-command
- */
+/** Publish the bot's slash commands to Discord (`bun run publish`; global bulk overwrite, up to an hour to propagate). @see https://docs.discord.com/developers/interactions/application-commands#registering-a-command */
 
 import { commands } from "../src/lib/commands";
 import { publishDiscordCommands } from "../src/lib/discord-commands";

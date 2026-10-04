@@ -1,12 +1,5 @@
 #!/usr/bin/env bun
-/**
- * Remove every global Discord slash command.
- *
- *   bun run clear
- *
- * Bun auto-loads `.env.local`, so `DISCORD_BOT_TOKEN` and
- * `DISCORD_APPLICATION_ID` are picked up automatically.
- */
+/** Remove every global Discord slash command (`bun run clear`; Bun auto-loads `.env.local`). */
 
 import { clearDiscordCommands } from "../src/lib/discord-commands";
 
