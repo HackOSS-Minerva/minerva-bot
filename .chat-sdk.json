@@ -1,0 +1,7 @@
+{
+  "files": [
+    "src/app/api/discord/gateway/route.ts",
+    "vercel.json"
+  ],
+  "version": 1
+}
