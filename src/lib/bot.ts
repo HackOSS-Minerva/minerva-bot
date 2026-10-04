@@ -1,7 +1,4 @@
-import {
-  createDiscordAdapter,
-  DiscordInteractionResponseFlag,
-} from "@chat-adapter/discord";
+import { createDiscordAdapter, DiscordInteractionResponseFlag } from "@chat-adapter/discord";
 import { createMemoryState } from "@chat-adapter/state-memory";
 import { Chat } from "chat";
 
@@ -19,9 +16,7 @@ export const bot = new Chat({
   adapters: {
     discord: createDiscordAdapter({
       interactionFlags: ({ command }) =>
-        EPHEMERAL_COMMANDS.includes(command)
-          ? DiscordInteractionResponseFlag.Ephemeral
-          : undefined,
+        EPHEMERAL_COMMANDS.includes(command) ? DiscordInteractionResponseFlag.Ephemeral : undefined,
     }),
   },
   state: createMemoryState(),

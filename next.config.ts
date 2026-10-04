@@ -1,11 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: [
-    "@chat-adapter/discord",
-    "@chat-adapter/state-memory",
-    "chat",
-  ],
+  transpilePackages: ["@chat-adapter/discord", "@chat-adapter/state-memory", "chat"],
   serverExternalPackages: [
     "@discordjs/voice",
     "@discordjs/ws",

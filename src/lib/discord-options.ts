@@ -1,8 +1,5 @@
 import type { DiscordAdapter } from "@chat-adapter/discord";
-import type {
-  APIChatInputApplicationCommandInteraction,
-  APIUser,
-} from "discord-api-types/v10";
+import type { APIChatInputApplicationCommandInteraction, APIUser } from "discord-api-types/v10";
 import type { SlashCommandEvent } from "chat";
 
 /** Helpers for reading the raw interaction tree on `SlashCommandEvent.raw` that the SDK flattens into `event.text`. */
@@ -12,9 +9,7 @@ const ADMINISTRATOR = 1n << 3n;
 
 /** Options are only typed on chat-input interactions, which is all this bot registers. */
 type CommandInteraction = APIChatInputApplicationCommandInteraction;
-type CommandOption = NonNullable<
-  NonNullable<CommandInteraction["data"]>["options"]
->[number];
+type CommandOption = NonNullable<NonNullable<CommandInteraction["data"]>["options"]>[number];
 
 function asInteraction(raw: unknown): CommandInteraction | undefined {
   return raw as CommandInteraction | undefined;
@@ -70,10 +65,7 @@ export interface ResolvedUserOption {
 }
 
 /** Resolve a user mention option, preferring resolved users and falling back to the raw id. */
-export function getUserOption(
-  raw: unknown,
-  name: string,
-): ResolvedUserOption | null {
+export function getUserOption(raw: unknown, name: string): ResolvedUserOption | null {
   const resolved = asInteraction(raw)?.data?.resolved;
 
   for (const option of getOptions(raw)) {

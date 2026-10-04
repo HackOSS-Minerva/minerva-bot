@@ -21,9 +21,7 @@ export async function handleRoles(event: SlashCommandEvent): Promise<void> {
     return;
   }
 
-  const existingNames = new Set(
-    existing.map((role) => role.name.toLowerCase()),
-  );
+  const existingNames = new Set(existing.map((role) => role.name.toLowerCase()));
   const created: string[] = [];
   const skipped: string[] = [];
 
@@ -42,11 +40,7 @@ export async function handleRoles(event: SlashCommandEvent): Promise<void> {
       });
       created.push(templateRole.name);
     } catch (error) {
-      await reportError(
-        event,
-        `Couldn't create the ${templateRole.name} role`,
-        error,
-      );
+      await reportError(event, `Couldn't create the ${templateRole.name} role`, error);
       return;
     }
   }

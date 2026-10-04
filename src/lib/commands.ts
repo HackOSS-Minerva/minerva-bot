@@ -75,7 +75,8 @@ export const COMMAND_AUTOASSIGN = {
 export const COMMAND_SETUP = {
   ...adminGuildCommand,
   name: "setup",
-  description: "⚠️ Destructive: deletes every channel and category, then recreates the template (admins only).",
+  description:
+    "⚠️ Destructive: deletes every channel and category, then recreates the template (admins only).",
 } satisfies RESTPostAPIApplicationCommandsJSONBody;
 
 /** `/roles` — create the standard roles (administrator only). */

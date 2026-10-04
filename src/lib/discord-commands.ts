@@ -24,11 +24,8 @@ interface ResolvedConfig {
   apiUrl: string;
 }
 
-function resolveConfig(
-  options: PublishDiscordCommandsOptions,
-): ResolvedConfig {
-  const applicationId =
-    options.applicationId ?? process.env.DISCORD_APPLICATION_ID;
+function resolveConfig(options: PublishDiscordCommandsOptions): ResolvedConfig {
+  const applicationId = options.applicationId ?? process.env.DISCORD_APPLICATION_ID;
 
   if (!applicationId) {
     throw new Error(
@@ -54,11 +51,10 @@ export async function publishDiscordCommands(
   const config = resolveConfig(options);
   const commands = options.commands ?? [];
 
-  return discordRequest<APIApplicationCommand[]>(
-    commandsEndpoint(config),
-    config.botToken,
-    { method: "PUT", body: JSON.stringify(commands) },
-  );
+  return discordRequest<APIApplicationCommand[]>(commandsEndpoint(config), config.botToken, {
+    method: "PUT",
+    body: JSON.stringify(commands),
+  });
 }
 
 /** List the application's currently registered global commands. */
@@ -67,11 +63,9 @@ export async function listDiscordCommands(
 ): Promise<APIApplicationCommand[]> {
   const config = resolveConfig(options);
 
-  return discordRequest<APIApplicationCommand[]>(
-    commandsEndpoint(config),
-    config.botToken,
-    { method: "GET" },
-  );
+  return discordRequest<APIApplicationCommand[]>(commandsEndpoint(config), config.botToken, {
+    method: "GET",
+  });
 }
 
 /** Remove every global command by overwriting the list with an empty array. */

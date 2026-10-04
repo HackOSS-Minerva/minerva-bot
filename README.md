@@ -30,13 +30,13 @@ The bot registers four guild slash commands. Definitions live in
 (Discord server ID → hackathon) live in `tenants.json` and are read through
 `src/lib/tenants.ts`.
 
-| Command | Who can run it | Description |
-| --- | --- | --- |
-| `/assign <role>` | Everyone | Assign yourself the `hacker`, `judge`, or `mentor` role. |
-| `/assign @user <role>` | Administrators | Assign a role to another member. |
-| `/setup` | Administrators | ⚠️ Destructive: delete every channel and category, then recreate the standard ones. |
-| `/roles` | Administrators | Create the `Hacker`, `Organizer`, `Judge`, and `Mentor` roles. |
-| `/welcome` | Everyone | Greet this server's hackathon and report systems status. |
+| Command                | Who can run it | Description                                                                         |
+| ---------------------- | -------------- | ----------------------------------------------------------------------------------- |
+| `/assign <role>`       | Everyone       | Assign yourself the `hacker`, `judge`, or `mentor` role.                            |
+| `/assign @user <role>` | Administrators | Assign a role to another member.                                                    |
+| `/setup`               | Administrators | ⚠️ Destructive: delete every channel and category, then recreate the standard ones. |
+| `/roles`               | Administrators | Create the `Hacker`, `Organizer`, `Judge`, and `Mentor` roles.                      |
+| `/welcome`             | Everyone       | Greet this server's hackathon and report systems status.                            |
 
 The `/assign` command responds ephemerally, so only the invoker sees the
 result. `/setup`, `/roles`, and `/welcome` reply publicly so everyone in the
@@ -58,7 +58,7 @@ riskier way to reach the same empty state.
 If any template roles are missing, `/setup` stops and tells you to run `/roles`
 and then `/setup`.
 
-**`/setup` is destructive.** It posts a warning, then deletes *every* existing
+**`/setup` is destructive.** It posts a warning, then deletes _every_ existing
 channel and category in the server before rebuilding the template from
 `src/lib/server-template.ts` — so anything outside the template (extra
 channels, threads, pins, message history) is permanently lost. `/roles` is not
@@ -78,8 +78,8 @@ The template created by `/roles` and `/setup` lives in
   - **🔴 organizers** — `general`, `system-logs` (hidden from `@everyone`; the `Organizer` role and administrators can see and manage it)
 
   **Why the emoji lives in two different places.** Discord strips emoji from
-  text/forum channel *names* (it lowercases them and turns spaces into hyphens),
-  but category names are exempt from that normalization and channel *topics* are
+  text/forum channel _names_ (it lowercases them and turns spaces into hyphens),
+  but category names are exempt from that normalization and channel _topics_ are
   unconstrained. So the sidebar circle comes from the category name and the
   per-channel circle comes from the topic, built by `categoryLabel()` and
   `channelTopic()` in `src/lib/server-template.ts`. Don't "fix" this by inlining
@@ -129,15 +129,15 @@ tenants.json                              Discord server ID → hackathon tenant
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `bun run dev` | Start the development server |
-| `bun run build` | Create a production build |
-| `bun run start` | Start the production server |
-| `bun run typecheck` | Type-check the project |
-| `bun run publish` | Publish (bulk overwrite) Discord slash commands |
-| `bun run commands` | List registered Discord slash commands |
-| `bun run clear` | Remove every global Discord slash command |
+| Command             | Description                                     |
+| ------------------- | ----------------------------------------------- |
+| `bun run dev`       | Start the development server                    |
+| `bun run build`     | Create a production build                       |
+| `bun run start`     | Start the production server                     |
+| `bun run typecheck` | Type-check the project                          |
+| `bun run publish`   | Publish (bulk overwrite) Discord slash commands |
+| `bun run commands`  | List registered Discord slash commands          |
+| `bun run clear`     | Remove every global Discord slash command       |
 
 ## Learn More
 

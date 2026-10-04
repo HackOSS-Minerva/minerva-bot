@@ -38,9 +38,7 @@ export function summarize(
 
   if (skipped.length > 0) {
     lines.push(
-      `The following ${noun} already exist: ${skipped
-        .map((name) => `\`${name}\``)
-        .join(", ")}`,
+      `The following ${noun} already exist: ${skipped.map((name) => `\`${name}\``).join(", ")}`,
     );
   }
 

@@ -1,19 +1,12 @@
 import type { SlashCommandEvent } from "chat";
 
 import { addGuildMemberRole, getGuildRoles } from "../discord-guild";
-import {
-  getGuildId,
-  getStringOption,
-  getUserOption,
-  isAdministrator,
-} from "../discord-options";
+import { getGuildId, getStringOption, getUserOption, isAdministrator } from "../discord-options";
 import { TEMPLATE_ROLES } from "../server-template";
 import { reportError } from "./shared";
 
 /** `/autoassign <user> <hacker|organizer|judge|mentor>` (administrator only) — assigns a template role to any member. */
-export async function handleAutoAssign(
-  event: SlashCommandEvent,
-): Promise<void> {
+export async function handleAutoAssign(event: SlashCommandEvent): Promise<void> {
   const guildId = getGuildId(event.raw);
   if (!guildId) {
     await event.channel.post("This command can only be used in a server.");
@@ -34,9 +27,7 @@ export async function handleAutoAssign(
   const roleKey = (getStringOption(event.raw, "role") ?? "").toLowerCase();
   const templateRole = TEMPLATE_ROLES.find((role) => role.key === roleKey);
   if (!templateRole) {
-    await event.channel.post(
-      "Pick a role: hacker, organizer, judge, or mentor.",
-    );
+    await event.channel.post("Pick a role: hacker, organizer, judge, or mentor.");
     return;
   }
 
@@ -49,8 +40,7 @@ export async function handleAutoAssign(
   }
 
   const role = roles.find(
-    (candidate) =>
-      candidate.name.toLowerCase() === templateRole.name.toLowerCase(),
+    (candidate) => candidate.name.toLowerCase() === templateRole.name.toLowerCase(),
   );
   if (!role) {
     await event.channel.post(

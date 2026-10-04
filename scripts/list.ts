@@ -12,16 +12,12 @@ try {
     console.log("  (none)");
   } else {
     for (const command of commands) {
-      console.log(
-        `  /${command.name} — ${command.description} [id: ${command.id}]`,
-      );
+      console.log(`  /${command.name} — ${command.description} [id: ${command.id}]`);
     }
   }
 } catch (error) {
   console.error(
-    `\nFailed to list commands: ${
-      error instanceof Error ? error.message : String(error)
-    }`,
+    `\nFailed to list commands: ${error instanceof Error ? error.message : String(error)}`,
   );
   process.exit(1);
 }

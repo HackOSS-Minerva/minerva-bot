@@ -15,19 +15,13 @@ try {
 
   console.log(`\nPublished global commands (${registered.length}):`);
   for (const command of registered) {
-    console.log(
-      `  /${command.name} — ${command.description} [id: ${command.id}]`,
-    );
+    console.log(`  /${command.name} — ${command.description} [id: ${command.id}]`);
   }
 
-  console.log(
-    "\nGlobal commands can take up to an hour to appear in Discord clients.",
-  );
+  console.log("\nGlobal commands can take up to an hour to appear in Discord clients.");
 } catch (error) {
   console.error(
-    `\nFailed to publish commands: ${
-      error instanceof Error ? error.message : String(error)
-    }`,
+    `\nFailed to publish commands: ${error instanceof Error ? error.message : String(error)}`,
   );
   process.exit(1);
 }

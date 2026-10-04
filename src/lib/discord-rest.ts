@@ -4,19 +4,14 @@ const DEFAULT_API_URL = "https://discord.com/api/v10";
 
 /** Base Discord REST URL, honoring `DISCORD_API_URL`. Trailing slashes trimmed. */
 export function resolveApiUrl(apiUrl?: string): string {
-  return (apiUrl ?? process.env.DISCORD_API_URL ?? DEFAULT_API_URL).replace(
-    /\/+$/,
-    "",
-  );
+  return (apiUrl ?? process.env.DISCORD_API_URL ?? DEFAULT_API_URL).replace(/\/+$/, "");
 }
 
 /** Bot token from the argument or `DISCORD_BOT_TOKEN`. */
 export function resolveBotToken(botToken?: string): string {
   const resolved = botToken ?? process.env.DISCORD_BOT_TOKEN;
   if (!resolved) {
-    throw new Error(
-      "Missing Discord bot token. Set DISCORD_BOT_TOKEN or pass botToken.",
-    );
+    throw new Error("Missing Discord bot token. Set DISCORD_BOT_TOKEN or pass botToken.");
   }
   return resolved;
 }

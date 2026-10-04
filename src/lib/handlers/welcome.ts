@@ -19,7 +19,5 @@ export async function handleWelcome(event: SlashCommandEvent): Promise<void> {
     return;
   }
 
-  await event.channel.post(
-    `Hello ${tenant.name}! 👋 All systems are operational! ✅`,
-  );
+  await event.channel.post(`Hello ${tenant.name}! 👋 All systems are operational! ✅`);
 }

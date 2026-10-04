@@ -129,9 +129,7 @@ function orBits(a?: string | null, b?: string | null): string | undefined {
  * bits to keep any manual permission tweaks the server admins made.
  */
 export function withOrganizerOverwrites(
-  existing:
-    | { id: string; type: number; allow?: string; deny?: string }[]
-    | undefined,
+  existing: { id: string; type: number; allow?: string; deny?: string }[] | undefined,
   guildId: string,
   botUserId: string | null,
   organizerRoleId: string | null,
@@ -180,11 +178,7 @@ interface CategoryResult {
 }
 
 /** Render one summary row, e.g. `• **organizers** (category): \`#general\`, \`#system-logs\``. */
-function categoryLine(
-  name: string,
-  includeCategory: boolean,
-  channels: string[],
-): string {
+function categoryLine(name: string, includeCategory: boolean, channels: string[]): string {
   const label = includeCategory ? `**${name}** (category)` : `**${name}**`;
   const list = channels.map((channel) => `\`#${channel}\``).join(", ");
   return list ? `• ${label}: ${list}` : `• ${label}`;
@@ -194,19 +188,12 @@ function categoryLine(
  * Build the public `/setup` summary. Channels are grouped under their category
  * (instead of one long comma-separated list) so the result is easy to scan.
  */
-function summarizeSetup(
-  results: CategoryResult[],
-  wipe?: WipeResult,
-): string {
+function summarizeSetup(results: CategoryResult[], wipe?: WipeResult): string {
   const count = (pick: (result: CategoryResult) => number): number =>
     results.reduce((total, result) => total + pick(result), 0);
 
-  const newCategories = results.filter(
-    (result) => result.category === "created",
-  );
-  const repairedCategories = results.filter(
-    (result) => result.category === "repaired",
-  );
+  const newCategories = results.filter((result) => result.category === "created");
+  const repairedCategories = results.filter((result) => result.category === "repaired");
   const withNewChannels = results.filter((result) => result.created.length > 0);
   const untouched = results.filter(
     (result) => result.category === "existing" || result.existing.length > 0,
@@ -219,8 +206,7 @@ function summarizeSetup(
   const untouchedCount =
     results.filter((result) => result.category === "existing").length +
     count((result) => result.existing.length);
-  const repairedCount =
-    repairedCategories.length + count((result) => result.repaired.length);
+  const repairedCount = repairedCategories.length + count((result) => result.repaired.length);
 
   // No "complete ✅" banner: the summary now goes straight to the facts, and a
   // completion header read as a verdict on a run that may only have partly
@@ -246,11 +232,7 @@ function summarizeSetup(
     }
   }
 
-  if (
-    newCategories.length === 0 &&
-    newChannelCount === 0 &&
-    repairedCount === 0
-  ) {
+  if (newCategories.length === 0 && newChannelCount === 0 && repairedCount === 0) {
     if (lines.length > 0) {
       lines.push("");
     }
@@ -280,26 +262,14 @@ function summarizeSetup(
   if (untouched.length > 0) {
     section("**The following channels already exist:**");
     for (const result of untouched) {
-      lines.push(
-        categoryLine(
-          result.name,
-          result.category === "existing",
-          result.existing,
-        ),
-      );
+      lines.push(categoryLine(result.name, result.category === "existing", result.existing));
     }
   }
 
   if (repaired.length > 0) {
     section(`🔧 **Updated (${repairedCount}):**`);
     for (const result of repaired) {
-      lines.push(
-        categoryLine(
-          result.name,
-          result.category === "repaired",
-          result.repaired,
-        ),
-      );
+      lines.push(categoryLine(result.name, result.category === "repaired", result.repaired));
     }
   }
 
@@ -327,11 +297,12 @@ function labelChannel(channel: RESTGetAPIGuildChannelsResult[number]): string {
  * `Info Desk`, so a server set up before emojis were introduced is adopted
  * rather than duplicated.
  */
-function matchesCategoryName(actual: string | null | undefined, category: TemplateCategory): boolean {
+function matchesCategoryName(
+  actual: string | null | undefined,
+  category: TemplateCategory,
+): boolean {
   const candidates = [categoryLabel(category), category.name];
-  return candidates.some(
-    (candidate) => actual?.toLowerCase() === candidate.toLowerCase(),
-  );
+  return candidates.some((candidate) => actual?.toLowerCase() === candidate.toLowerCase());
 }
 
 /**
@@ -340,12 +311,8 @@ function matchesCategoryName(actual: string | null | undefined, category: Templa
  * `APIGuildChannel` is a union whose base type omits `topic`, so it is read off
  * the subtypes that actually carry it rather than cast across the whole union.
  */
-function channelTopicOf(
-  channel: RESTGetAPIGuildChannelsResult[number],
-): string | null {
-  return "topic" in channel && typeof channel.topic === "string"
-    ? channel.topic
-    : null;
+function channelTopicOf(channel: RESTGetAPIGuildChannelsResult[number]): string | null {
+  return "topic" in channel && typeof channel.topic === "string" ? channel.topic : null;
 }
 
 /** Strip a leading run of non-alphanumeric characters (emoji, pipes, spaces) from a name. */
@@ -377,16 +344,10 @@ function matchesChannelName(actual: string | null | undefined, name: string): bo
  * Failures are collected instead of thrown — one undeletable channel must not
  * abort the rebuild.
  */
-async function wipeGuildChannels(
-  channels: RESTGetAPIGuildChannelsResult,
-): Promise<WipeResult> {
+async function wipeGuildChannels(channels: RESTGetAPIGuildChannelsResult): Promise<WipeResult> {
   const deletedIds = new Set<string>();
-  const categories = channels.filter(
-    (channel) => channel.type === ChannelType.GuildCategory,
-  );
-  const others = channels.filter(
-    (channel) => channel.type !== ChannelType.GuildCategory,
-  );
+  const categories = channels.filter((channel) => channel.type === ChannelType.GuildCategory);
+  const others = channels.filter((channel) => channel.type !== ChannelType.GuildCategory);
 
   for (const channel of [...others, ...categories]) {
     try {
@@ -413,22 +374,14 @@ async function wipeGuildChannels(
  * public channel — falling back to `#general`, then to any text channel, so the
  * outcome is never silently lost.
  */
-async function findFallbackChannel(
-  guildId: string,
-): Promise<{ id: string; name: string } | null> {
+async function findFallbackChannel(guildId: string): Promise<{ id: string; name: string } | null> {
   const channels = await getGuildChannels(guildId);
-  const textChannels = channels.filter(
-    (channel) => channel.type === ChannelType.GuildText,
-  );
+  const textChannels = channels.filter((channel) => channel.type === ChannelType.GuildText);
 
   // Derive the target from the template instead of hardcoding names, so this
   // keeps tracking `TEMPLATE_CATEGORIES` if either is renamed.
-  const logsCategory = TEMPLATE_CATEGORIES.find(
-    (category) => category.name === "organizers",
-  );
-  const logsChannel = logsCategory?.channels.find(
-    (channel) => channel.name === "system-logs",
-  );
+  const logsCategory = TEMPLATE_CATEGORIES.find((category) => category.name === "organizers");
+  const logsChannel = logsCategory?.channels.find((channel) => channel.name === "system-logs");
   const logsName = logsChannel?.name ?? "system-logs";
   const generalName =
     TEMPLATE_CATEGORIES.find((category) => category.name === "general")?.channels.find(
@@ -454,9 +407,7 @@ async function findFallbackChannel(
     textChannels.find((channel) => matchesChannelName(channel.name, generalName)) ??
     textChannels[0];
 
-  return preferred
-    ? { id: preferred.id, name: preferred.name ?? logsName }
-    : null;
+  return preferred ? { id: preferred.id, name: preferred.name ?? logsName } : null;
 }
 
 /**
@@ -480,10 +431,7 @@ async function post(
   try {
     const fallback = await findFallbackChannel(guildId);
     if (fallback) {
-      await createChannelMessage(
-        fallback.id,
-        fallbackNote ? `${text}\n\n${fallbackNote}` : text,
-      );
+      await createChannelMessage(fallback.id, fallbackNote ? `${text}\n\n${fallbackNote}` : text);
     }
   } catch {
     // Nothing else we can do — the reply is lost.
@@ -514,18 +462,11 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
   try {
     roles = await getGuildRoles(guildId);
   } catch (error) {
-    await reportFailure(
-      event,
-      guildId,
-      "Couldn't read this server's roles",
-      error,
-    );
+    await reportFailure(event, guildId, "Couldn't read this server's roles", error);
     return;
   }
 
-  const existingRoleNames = new Set(
-    roles.map((role) => role.name.toLowerCase()),
-  );
+  const existingRoleNames = new Set(roles.map((role) => role.name.toLowerCase()));
   const missingRoles = TEMPLATE_ROLES.filter(
     (templateRole) => !existingRoleNames.has(templateRole.name.toLowerCase()),
   );
@@ -546,9 +487,7 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
 
   // Resolve the Organizer role so `adminOnly` categories can grant it
   // channel-admin rights. The gate above guarantees it exists.
-  const organizerName = TEMPLATE_ROLES.find(
-    (role) => role.key === "organizer",
-  )?.name.toLowerCase();
+  const organizerName = TEMPLATE_ROLES.find((role) => role.key === "organizer")?.name.toLowerCase();
   const organizerRoleId =
     roles.find((role) => role.name.toLowerCase() === organizerName)?.id ?? null;
 
@@ -556,12 +495,7 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
   try {
     existing = await getGuildChannels(guildId);
   } catch (error) {
-    await reportFailure(
-      event,
-      guildId,
-      "Couldn't read this server's channels",
-      error,
-    );
+    await reportFailure(event, guildId, "Couldn't read this server's channels", error);
     return;
   }
 
@@ -602,8 +536,7 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
     let categoryId: string;
     const existingCategory = existing.find(
       (channel) =>
-        channel.type === ChannelType.GuildCategory &&
-        matchesCategoryName(channel.name, category),
+        channel.type === ChannelType.GuildCategory && matchesCategoryName(channel.name, category),
     );
 
     if (existingCategory) {
@@ -614,11 +547,8 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
       const wantsRename = existingCategory.name !== categoryLabel(category);
       const needsPermissions = Boolean(
         category.adminOnly &&
-          organizerRoleId &&
-          !hasOrganizerOverwrite(
-            existingCategory.permission_overwrites,
-            organizerRoleId,
-          ),
+        organizerRoleId &&
+        !hasOrganizerOverwrite(existingCategory.permission_overwrites, organizerRoleId),
       );
 
       if (wantsRename || needsPermissions) {
@@ -658,12 +588,7 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
         categoryId = createdCategory.id;
         result.category = "created";
       } catch (error) {
-        await reportFailure(
-          event,
-          guildId,
-          `Couldn't create the ${category.name} category`,
-          error,
-        );
+        await reportFailure(event, guildId, `Couldn't create the ${category.name} category`, error);
         return;
       }
     }
@@ -671,18 +596,14 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
     for (const channel of category.channels) {
       const existingChannel = existing.find(
         (candidate) =>
-          candidate.parent_id === categoryId &&
-          matchesChannelName(candidate.name, channel.name),
+          candidate.parent_id === categoryId && matchesChannelName(candidate.name, channel.name),
       );
       if (existingChannel) {
         const wantsTopic = channelTopicOf(existingChannel) !== channelTopic(channel);
         const needsPermissions = Boolean(
           category.adminOnly &&
-            organizerRoleId &&
-            !hasOrganizerOverwrite(
-              existingChannel.permission_overwrites,
-              organizerRoleId,
-            ),
+          organizerRoleId &&
+          !hasOrganizerOverwrite(existingChannel.permission_overwrites, organizerRoleId),
         );
 
         if (wantsTopic || needsPermissions) {
@@ -702,12 +623,7 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
             });
             result.repaired.push(channel.name);
           } catch (error) {
-            await reportFailure(
-              event,
-              guildId,
-              `Couldn't update #${channel.name}`,
-              error,
-            );
+            await reportFailure(event, guildId, `Couldn't update #${channel.name}`, error);
             return;
           }
         } else {
@@ -727,12 +643,7 @@ export async function handleSetup(event: SlashCommandEvent): Promise<void> {
         await createGuildChannel(guildId, body);
         result.created.push(channel.name);
       } catch (error) {
-        await reportFailure(
-          event,
-          guildId,
-          `Couldn't create #${channel.name}`,
-          error,
-        );
+        await reportFailure(event, guildId, `Couldn't create #${channel.name}`, error);
         return;
       }
     }

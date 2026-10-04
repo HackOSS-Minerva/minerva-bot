@@ -10,7 +10,7 @@ interface Context {
 async function handleRequest(request: Request, context: Context) {
   const { platform } = await context.params;
 
-  console.log(`PLATFORM ${platform}`)
+  console.log(`PLATFORM ${platform}`);
 
   const handler = bot.webhooks[platform as Platform];
 

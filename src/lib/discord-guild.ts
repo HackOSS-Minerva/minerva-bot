@@ -12,10 +12,7 @@ import type {
   Snowflake,
 } from "discord-api-types/v10";
 
-import {
-  discordApiRequest,
-  type DiscordApiRequestOptions,
-} from "./discord-rest";
+import { discordApiRequest, type DiscordApiRequestOptions } from "./discord-rest";
 
 /** Guild-scoped Discord REST operations used by the `/setup`, `/roles`, and `/assign` commands. @see https://docs.discord.com/developers/resources/guild */
 
@@ -115,11 +112,7 @@ export function deleteGuildChannel(
   channelId: Snowflake,
   options?: DiscordApiRequestOptions,
 ): Promise<void> {
-  return discordApiRequest<void>(
-    `/channels/${channelId}`,
-    { method: "DELETE" },
-    options,
-  );
+  return discordApiRequest<void>(`/channels/${channelId}`, { method: "DELETE" }, options);
 }
 
 /** Post a plain-text message in a channel (used when the interaction's channel no longer exists). */

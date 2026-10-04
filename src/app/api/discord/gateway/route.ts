@@ -24,6 +24,6 @@ export async function GET(request: Request): Promise<Response> {
     { waitUntil: (task) => after(() => task) },
     durationMs,
     undefined,
-    webhookUrl
+    webhookUrl,
   );
 }

@@ -20,10 +20,38 @@ export interface TemplateRole {
 
 /** Roles that `/roles` creates and `/autoassign` can grant. */
 export const TEMPLATE_ROLES: TemplateRole[] = [
-  { key: "hacker", name: "Hacker", color: 0x5865f2, hoist: true, mentionable: true, selfAssignable: true },
-  { key: "organizer", name: "Organizer", color: 0xfee75c, hoist: true, mentionable: true, selfAssignable: false },
-  { key: "judge", name: "Judge", color: 0xeb459e, hoist: true, mentionable: true, selfAssignable: true },
-  { key: "mentor", name: "Mentor", color: 0x57f287, hoist: true, mentionable: true, selfAssignable: true },
+  {
+    key: "hacker",
+    name: "Hacker",
+    color: 0x5865f2,
+    hoist: true,
+    mentionable: true,
+    selfAssignable: true,
+  },
+  {
+    key: "organizer",
+    name: "Organizer",
+    color: 0xfee75c,
+    hoist: true,
+    mentionable: true,
+    selfAssignable: false,
+  },
+  {
+    key: "judge",
+    name: "Judge",
+    color: 0xeb459e,
+    hoist: true,
+    mentionable: true,
+    selfAssignable: true,
+  },
+  {
+    key: "mentor",
+    name: "Mentor",
+    color: 0x57f287,
+    hoist: true,
+    mentionable: true,
+    selfAssignable: true,
+  },
 ];
 
 /** Roles that `/assign` can grant (self-serve, in template order). */
@@ -32,8 +60,9 @@ export const SELF_ASSIGNABLE_ROLES: TemplateRole[] = TEMPLATE_ROLES.filter(
 );
 
 /** The self-assignable role keys, in template order. */
-export const ASSIGNABLE_ROLE_NAMES: TemplateRole["key"][] =
-  SELF_ASSIGNABLE_ROLES.map((role) => role.key);
+export const ASSIGNABLE_ROLE_NAMES: TemplateRole["key"][] = SELF_ASSIGNABLE_ROLES.map(
+  (role) => role.key,
+);
 
 /** A channel created by `/setup`. */
 export interface TemplateChannel {
@@ -101,39 +130,104 @@ export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     name: "Info Desk",
     emoji: "🔵",
     channels: [
-      { name: "rules", type: ChannelType.GuildText, emoji: "🔵", topic: "🔵 | Rules and event guidelines" },
-      { name: "welcome", type: ChannelType.GuildText, emoji: "🟢", topic: "🟢 | Say hello and introduce yourself" },
-      { name: "role-request", type: ChannelType.GuildText, emoji: "🟡", topic: "🟡 | Ask an organizer for a role" },
-      { name: "resources", type: ChannelType.GuildText, emoji: "⚪", topic: "⚪ | Links, guides, and reference material" },
-      { name: "faq", type: ChannelType.GuildText, emoji: "🟣", topic: "🟣 | Frequently asked questions" },
+      {
+        name: "rules",
+        type: ChannelType.GuildText,
+        emoji: "🔵",
+        topic: "🔵 | Rules and event guidelines",
+      },
+      {
+        name: "welcome",
+        type: ChannelType.GuildText,
+        emoji: "🟢",
+        topic: "🟢 | Say hello and introduce yourself",
+      },
+      {
+        name: "role-request",
+        type: ChannelType.GuildText,
+        emoji: "🟡",
+        topic: "🟡 | Ask an organizer for a role",
+      },
+      {
+        name: "resources",
+        type: ChannelType.GuildText,
+        emoji: "⚪",
+        topic: "⚪ | Links, guides, and reference material",
+      },
+      {
+        name: "faq",
+        type: ChannelType.GuildText,
+        emoji: "🟣",
+        topic: "🟣 | Frequently asked questions",
+      },
     ],
   },
   {
     name: "workshops",
     emoji: "🟠",
     channels: [
-      { name: "workshop-questions", type: ChannelType.GuildText, emoji: "🟠", topic: "🟠 | Questions for workshop speakers" },
-      { name: "mlh", type: ChannelType.GuildText, emoji: "🟡", topic: "🟡 | Major League Hacking announcements" },
+      {
+        name: "workshop-questions",
+        type: ChannelType.GuildText,
+        emoji: "🟠",
+        topic: "🟠 | Questions for workshop speakers",
+      },
+      {
+        name: "mlh",
+        type: ChannelType.GuildText,
+        emoji: "🟡",
+        topic: "🟡 | Major League Hacking announcements",
+      },
     ],
   },
   {
     name: "help-desk",
     emoji: "🟢",
     channels: [
-      { name: "team-formation", type: ChannelType.GuildForum, emoji: "🟢", topic: "🟢 | Find teammates and post team requests" },
+      {
+        name: "team-formation",
+        type: ChannelType.GuildForum,
+        emoji: "🟢",
+        topic: "🟢 | Find teammates and post team requests",
+      },
     ],
   },
   {
     name: "general",
     emoji: "⚪",
     channels: [
-      { name: "introductions", type: ChannelType.GuildText, emoji: "🟢", topic: "🟢 | Introduce yourself to the hackathon" },
-      { name: "talk-to-organizers", type: ChannelType.GuildText, emoji: "🔴", topic: "🔴 | Talk directly to the organizers" },
+      {
+        name: "introductions",
+        type: ChannelType.GuildText,
+        emoji: "🟢",
+        topic: "🟢 | Introduce yourself to the hackathon",
+      },
+      {
+        name: "talk-to-organizers",
+        type: ChannelType.GuildText,
+        emoji: "🔴",
+        topic: "🔴 | Talk directly to the organizers",
+      },
       { name: "general", type: ChannelType.GuildText, emoji: "⚪", topic: "⚪ | General chatter" },
-      { name: "linkedin", type: ChannelType.GuildText, emoji: "🔵", topic: "🔵 | Share your LinkedIn" },
+      {
+        name: "linkedin",
+        type: ChannelType.GuildText,
+        emoji: "🔵",
+        topic: "🔵 | Share your LinkedIn",
+      },
       { name: "github", type: ChannelType.GuildText, emoji: "⚫", topic: "⚫ | Share your GitHub" },
-      { name: "devpost", type: ChannelType.GuildText, emoji: "🟠", topic: "🟠 | Share your Devpost" },
-      { name: "off-topic", type: ChannelType.GuildText, emoji: "🟣", topic: "🟣 | Anything that isn't hackathon-related" },
+      {
+        name: "devpost",
+        type: ChannelType.GuildText,
+        emoji: "🟠",
+        topic: "🟠 | Share your Devpost",
+      },
+      {
+        name: "off-topic",
+        type: ChannelType.GuildText,
+        emoji: "🟣",
+        topic: "🟣 | Anything that isn't hackathon-related",
+      },
       { name: "memes", type: ChannelType.GuildText, emoji: "🟡", topic: "🟡 | Memes" },
     ],
   },
@@ -141,8 +235,18 @@ export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     name: "mentors",
     emoji: "🟡",
     channels: [
-      { name: "mentor-introductions", type: ChannelType.GuildText, emoji: "🟡", topic: "🟡 | Meet the mentors" },
-      { name: "ask-mentors", type: ChannelType.GuildText, emoji: "🟢", topic: "🟢 | Ask a mentor for help" },
+      {
+        name: "mentor-introductions",
+        type: ChannelType.GuildText,
+        emoji: "🟡",
+        topic: "🟡 | Meet the mentors",
+      },
+      {
+        name: "ask-mentors",
+        type: ChannelType.GuildText,
+        emoji: "🟢",
+        topic: "🟢 | Ask a mentor for help",
+      },
     ],
   },
   {
@@ -150,8 +254,18 @@ export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     emoji: "🔴",
     adminOnly: true,
     channels: [
-      { name: "general", type: ChannelType.GuildText, emoji: "🔴", topic: "🔴 | Organizer discussion" },
-      { name: "system-logs", type: ChannelType.GuildText, emoji: "⚫", topic: "⚫ | Automated system logs" },
+      {
+        name: "general",
+        type: ChannelType.GuildText,
+        emoji: "🔴",
+        topic: "🔴 | Organizer discussion",
+      },
+      {
+        name: "system-logs",
+        type: ChannelType.GuildText,
+        emoji: "⚫",
+        topic: "⚫ | Automated system logs",
+      },
     ],
   },
 ];

@@ -14,9 +14,7 @@ export async function handleAssign(event: SlashCommandEvent): Promise<void> {
   }
 
   const roleKey = (getStringOption(event.raw, "role") ?? "").toLowerCase();
-  const templateRole = SELF_ASSIGNABLE_ROLES.find(
-    (role) => role.key === roleKey,
-  );
+  const templateRole = SELF_ASSIGNABLE_ROLES.find((role) => role.key === roleKey);
   if (!templateRole) {
     await event.channel.post("Pick a role: hacker, judge, or mentor.");
     return;
@@ -37,8 +35,7 @@ export async function handleAssign(event: SlashCommandEvent): Promise<void> {
   }
 
   const role = roles.find(
-    (candidate) =>
-      candidate.name.toLowerCase() === templateRole.name.toLowerCase(),
+    (candidate) => candidate.name.toLowerCase() === templateRole.name.toLowerCase(),
   );
   if (!role) {
     await event.channel.post(
